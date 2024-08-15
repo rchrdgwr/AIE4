@@ -10,7 +10,7 @@
 ### Outline:
 
 🤜 BREAKOUT ROOM #1:
-- Task 1: Imports and Utilities
+- Task 1: Imports and Utilities  
 - Task 2: Documents
 - Task 3: Embeddings and Vectors
 - Task 4: Prompts
