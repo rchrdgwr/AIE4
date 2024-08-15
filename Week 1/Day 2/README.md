@@ -14,7 +14,7 @@
 - Task 2: Documents
 - Task 3: Embeddings and Vectors
 - Task 4: Prompts
-- Task 5: Retrieval Augmented Generation
+- Task 5: Retrieval Augmented Generation xxx
      - 🚧 ACTIVITY #1: Augment RAG
 
 ### Steps to Run:
