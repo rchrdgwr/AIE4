@@ -1,10 +1,11 @@
 import os
 from typing import List
+import fitz
 
 
 class TextFileLoader:
     def __init__(self, path: str, encoding: str = "utf-8"):
-        self.documents = []
+        self.documents = []  # contains a list of documents in text format
         self.path = path
         self.encoding = encoding
 
@@ -13,6 +14,8 @@ class TextFileLoader:
             self.load_directory()
         elif os.path.isfile(self.path) and self.path.endswith(".txt"):
             self.load_file()
+        elif os.path.isfile(self.path) and self.path.endswith(".pdf"):
+            self.load_pdf()
         else:
             raise ValueError(
                 "Provided path is neither a valid directory nor a .txt file."
@@ -21,15 +24,35 @@ class TextFileLoader:
     def load_file(self):
         with open(self.path, "r", encoding=self.encoding) as f:
             self.documents.append(f.read())
+    
+    def load_pdf(self):
+        with fitz.open(self.path) as pdf_document:
+            text = ""
+            for page_num in range(pdf_document.page_count):
+                page = pdf_document.load_page(page_num)
+                text += page.get_text()
+
+            self.documents.append(text)
+
 
     def load_directory(self):
         for root, _, files in os.walk(self.path):
             for file in files:
+                file_path = os.path.join(root, file)
                 if file.endswith(".txt"):
                     with open(
-                        os.path.join(root, file), "r", encoding=self.encoding
+                        file_path, "r", encoding=self.encoding
                     ) as f:
                         self.documents.append(f.read())
+                if file.endswith(".pdf"):
+                    with fitz.open(file_path) as pdf_document:  # Use the file_path here
+                        text = ""
+                        for page_num in range(pdf_document.page_count):
+                            page = pdf_document.load_page(page_num)
+                            text += page.get_text()
+                        
+                        self.documents.append(text)
+
 
     def load_documents(self):
         self.load()
@@ -37,6 +60,7 @@ class TextFileLoader:
 
 
 class CharacterTextSplitter:
+    # chunking
     def __init__(
         self,
         chunk_size: int = 1000,
@@ -63,14 +87,17 @@ class CharacterTextSplitter:
 
 
 if __name__ == "__main__":
-    loader = TextFileLoader("data/KingLear.txt")
+    # modification made to view changing chunk size and overlap
+    loader = TextFileLoader("../data/combined_sagas.txt")
     loader.load()
-    splitter = CharacterTextSplitter()
+    splitter = CharacterTextSplitter(chunk_size=50, chunk_overlap=10)
     chunks = splitter.split_texts(loader.documents)
     print(len(chunks))
     print(chunks[0])
     print("--------")
     print(chunks[1])
+    print("--------")
+    print(chunks[2])
     print("--------")
     print(chunks[-2])
     print("--------")
