@@ -1,0 +1,4 @@
+1. Introduction to Linear Regression
+2. Key Concepts and Formulas in Linear Regression
+3. Applications and Benefits of Linear Regression in Industry
+4. Conclusion and Call to Action
